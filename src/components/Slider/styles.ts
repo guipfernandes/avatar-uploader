@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 interface Props {
-	sliderBackground: string;
+	sliderThumbPosition: number;
 }
 
 export const Wrapper = styled.div`
   input[type=range] {
-    background: ${(props: Props) => props.sliderBackground} ;
+    background: ${({ sliderThumbPosition }: Props) => `linear-gradient(to right, #3F80FF 0%, #3F80FF ${sliderThumbPosition}%, #B9D1FF ${sliderThumbPosition}%, #B9D1FF 100%)`};
     border-radius: 1px;
     height: 2px;
     width: 276px;

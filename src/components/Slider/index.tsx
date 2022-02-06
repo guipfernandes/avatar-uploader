@@ -10,10 +10,10 @@ type Props = {
 } & typeof defaultProps;
 
 const defaultProps = {
-	initialValue: 50,
-	min: 0,
-	max: 100,
-	step: 1,
+	initialValue: 1,
+	min: 1,
+	max: 10,
+	step: 0.1,
 };
 
 const Slider = ({ initialValue, min, max, step, onChange }: Props) => {
@@ -28,8 +28,7 @@ const Slider = ({ initialValue, min, max, step, onChange }: Props) => {
 	};
 
 	return (
-		<S.Wrapper
-			sliderBackground={`linear-gradient(to right, #3F80FF 0%, #3F80FF ${sliderThumbPosition}%, #B9D1FF ${sliderThumbPosition}%, #B9D1FF 100%)`}>
+		<S.Wrapper sliderThumbPosition={sliderThumbPosition}>
 			<input id="slider"
 						 type="range"
 						 value={value}
