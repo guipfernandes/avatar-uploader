@@ -1,5 +1,5 @@
-import * as S from './styles';
 import Slider from 'components/Slider';
+import * as S from './styles';
 
 interface Props {
 	onCloseEditor: () => void;
@@ -12,9 +12,9 @@ const AvatarEditor = ({ onCloseEditor, onSaveEditor, onChangeZoom }: Props) => (
 		<S.SliderCrop>
 			<span>Crop</span>
 			<Slider onChange={onChangeZoom} />
-			<S.Button onClick={onSaveEditor}>Save</S.Button>
+			<S.Button role="save" onClick={onSaveEditor}>Save</S.Button>
 		</S.SliderCrop>
-		<S.CloseButton onClick={onCloseEditor} />
+		<S.CloseButton role="close" onClick={onCloseEditor} />
 	</S.Wrapper>
 );
 

@@ -30,6 +30,7 @@ const Slider = ({ initialValue, min, max, step, onChange }: Props) => {
 	return (
 		<S.Wrapper sliderThumbPosition={sliderThumbPosition}>
 			<input id="slider"
+						 role="slider"
 						 type="range"
 						 value={value}
 						 min={min}

@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import { Axis } from 'types/Axis';
+import { Axis } from 'types/axis';
 import { AlertIcon } from 'components/Icons';
 
 interface PropsUpload {
 	isDragActive: boolean;
+	isUploadMode: boolean;
 }
 
 interface PropsAvatar {
@@ -24,6 +25,10 @@ export const Wrapper = styled.div`
 
   font-size: 14px;
   line-height: 180%;
+
+  border-width: 2px;
+  border-style: ${({ isUploadMode }: PropsUpload) => isUploadMode ? 'dashed' : 'none'};
+  border-color: ${({ isDragActive }: PropsUpload) => isDragActive ? '#72ff58' : '#C7CDD3'};
 `;
 
 export const AvatarWrapper = styled.div`
@@ -64,24 +69,14 @@ export const AvatarIconError = styled(AlertIcon)`
   margin: auto;
 `;
 
-export const UploadZone = styled(Wrapper)`
+export const UploadZone = styled.div`
   width: 100%;
   height: 100%;
-  justify-content: flex-start;
-
-  background: #F2F5F8;
-  border-width: 2px;
-  border-style: dashed;
-  border-color: ${(props: PropsUpload) => props.isDragActive ? '#72ff58' : '#C7CDD3'};
-
-  cursor: pointer;
-`;
-
-export const UploadZoneDescription = styled.div`
+  display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  width: 100%;
+  cursor: pointer;
 `;
 
 export const Title = styled.div`

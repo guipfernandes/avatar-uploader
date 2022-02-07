@@ -10,7 +10,7 @@ const AvatarUploadFailed = ({ onCloseUploadFailed }: Props) => (
 			<span>Sorry, the upload failed</span>
 			<a onClick={onCloseUploadFailed}>Try again</a>
 		</S.ErrorInfo>
-		<S.CloseButton onClick={onCloseUploadFailed} />
+		<S.CloseButton role="close" onClick={onCloseUploadFailed} />
 	</S.Wrapper>
 );
 

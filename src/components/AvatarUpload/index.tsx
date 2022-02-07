@@ -1,12 +1,12 @@
-import * as S from './styles';
-import { ImageIcon } from 'components/Icons';
-import { FileRejection, useDropzone } from 'react-dropzone';
-import { useCallback, useMemo, useState } from 'react';
-import { FilePreview } from 'types/FilePreview';
 import AvatarEditor from 'components/AvatarEditor';
-import { Axis } from 'types/Axis';
-import useDraggable from 'hooks/useDraggable';
 import AvatarUploadFailed from 'components/AvatarUploadFailed';
+import { ImageIcon } from 'components/Icons';
+import useDraggable from 'hooks/useDraggable';
+import { useCallback, useMemo, useState } from 'react';
+import { FileRejection, useDropzone } from 'react-dropzone';
+import { Axis } from 'types/axis';
+import { FilePreview } from 'types/file-preview';
+import * as S from './styles';
 
 type Props = {
 	title?: string,
@@ -25,7 +25,14 @@ const AvatarUpload = ({ title, subtitle }: Props) => {
 	const [avatarScale, setAvatarScale] = useState(1);
 	const [avatarAxis, setAvatarAxis] = useState<Axis>({ x: 0, y: 0 });
 
-	useDraggable('#avatar', setAvatarAxis, imageFile);
+	useDraggable({
+		target: '#avatar',
+		onDragMove: setAvatarAxis,
+		canDrag: editMode,
+		deps: imageFile,
+	});
+
+	const isUploadMode = useMemo(() => !(editMode || uploadFailed), [editMode, uploadFailed]);
 
 	const onDrop = useCallback((files: File[]) => {
 		if (!files || !files.length) return;
@@ -40,6 +47,7 @@ const AvatarUpload = ({ title, subtitle }: Props) => {
 	const onDropRejected = useCallback((fileRejections: FileRejection[]) => {
 		setUploadFailed(fileRejections && fileRejections.length > 0);
 		setEditMode(false);
+		setImageFile(undefined);
 	}, []);
 
 	const {
@@ -62,12 +70,13 @@ const AvatarUpload = ({ title, subtitle }: Props) => {
 		<S.AvatarWrapper isEditMode={editMode}>
 			{imageFile ? (
 				<S.Avatar id="avatar"
+									role="avatar"
 									avatarAxis={avatarAxis}
 									avatarScale={avatarScale}
 									alt={imageFile.name}
 									src={imageFile.preview} />
 			) : uploadFailed && (
-				<S.AvatarError>
+				<S.AvatarError role="avatarError">
 					<S.AvatarIconError />
 				</S.AvatarError>
 			)}
@@ -76,20 +85,17 @@ const AvatarUpload = ({ title, subtitle }: Props) => {
 	), [avatarAxis, avatarScale, editMode, imageFile, uploadFailed]);
 
 	const avatarUploadComponent = useMemo(() => (!uploadFailed && !editMode &&
-    <S.UploadZone {...getRootProps({ isDragActive })}>
-			{avatarComponent}
-      <S.UploadZoneDescription>
-        <input {...getInputProps()} />
-        <S.Title>
-          <ImageIcon />
-          <span>{title}</span>
-        </S.Title>
-        <S.Subtitle>
-					{subtitle}
-        </S.Subtitle>
-      </S.UploadZoneDescription>
+    <S.UploadZone {...getRootProps()}>
+      <input role="imageInput" {...getInputProps()} />
+      <S.Title role="title">
+        <ImageIcon />
+        <span>{title}</span>
+      </S.Title>
+      <S.Subtitle role="subtitle">
+				{subtitle}
+      </S.Subtitle>
     </S.UploadZone>
-	), [avatarComponent, editMode, getInputProps, getRootProps, isDragActive, subtitle, title, uploadFailed]);
+	), [editMode, getInputProps, getRootProps, subtitle, title, uploadFailed]);
 
 	const uploadFailedComponent = useMemo(() => (uploadFailed && !editMode &&
     <AvatarUploadFailed onCloseUploadFailed={onCloseModal} />
@@ -102,8 +108,8 @@ const AvatarUpload = ({ title, subtitle }: Props) => {
 	), [editMode, imageFile, onChangeZoom, onCloseModal, onSaveEditor, uploadFailed]);
 
 	return (
-		<S.Wrapper>
-			{(editMode || uploadFailed) && avatarComponent}
+		<S.Wrapper isUploadMode={isUploadMode} isDragActive={isDragActive}>
+			{(imageFile || uploadFailed) && avatarComponent}
 			{avatarUploadComponent}
 			{uploadFailedComponent}
 			{avatarEditorComponent}
